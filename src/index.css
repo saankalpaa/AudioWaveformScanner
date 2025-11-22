@@ -13,6 +13,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -28,6 +32,13 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: white;
+  color: #242424;
+}
+
+input {
+  background-color: #fefefe;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
 h1 {

@@ -16,6 +16,7 @@ This README is a complete project-level guide: quick start, how the algorithm wo
 ## Quick start
 
 Requirements:
+
 - Node.js (LTS recommended)
 
 Install and run the dev server:
@@ -104,6 +105,7 @@ Production note: For a real service you should replace `localStorage` with a ser
 ## Developer notes & common troubleshooting
 
 Camera access errors
+
 - If the browser reports camera permission errors, check:
   - Browser permissions (site settings → Camera → Allow).
   - macOS Privacy (System Settings → Privacy & Security → Camera) and ensure your browser is allowed.
@@ -111,10 +113,12 @@ Camera access errors
 - If `TypeError: Cannot set properties of null (setting 'srcObject')` appears, the code attaches the stream after the `<video>` mounts. Reload and try again; check the console for details.
 
 Scanning reliability tips
+
 - Display or print barcodes at decent size (each bar should be several pixels wide when captured by the camera).
 - Use plain, high-contrast backgrounds and avoid reflections.
 
 Linting and hooks
+
 - The component uses `useCallback` and `useEffect` to keep stream handling predictable. If you modify the hooks, run the dev server and check console for React hook warnings.
 
 ---
@@ -137,6 +141,7 @@ If you want, I can now:
 Choose one and I'll implement it next.
 
 File pointers
+
 - Implementation: `src/WaveformBarcodeV2.jsx`
 - Root app: `src/App.jsx`
 - This file: `README.md`
@@ -152,6 +157,7 @@ The barcode is a visual representation made of 23 vertical bars. It encodes up t
 - Surround the data area with three reference bars with fixed heights: low (0) at the start, high (7) at the middle, and low (0) at the end. These help calibrate the scan and detect orientation.
 
 Final structure (23 bars):
+
 - [ref=0] + 10 data bars + [ref=7 center] + 10 data bars + [ref=0 end] = 23 bars
 
 Bar heights are discrete levels (0..7). For rendering we convert level -> visual height (unit height × (level + 1)).
@@ -163,7 +169,7 @@ Bar heights are discrete levels (0..7). For rendering we convert level -> visual
 - Combined bits: 40 bits data followed by 8-bit CRC (total 48 bits).
 - Grouping: treat the 48-bit value as 16 groups of 3 bits each (MSB-first), values range 0..7.
 - Gray encoding: map each 3-bit group via GRAY_ENCODE = [0,1,3,2,6,7,5,4]. This reduces the number of bit flips between adjacent levels.
-- Permutation: permute the 16 Gray values with index mapping (i*7) % 16 to spread consecutive groups across the barcode.
+- Permutation: permute the 16 Gray values with index mapping (i\*7) % 16 to spread consecutive groups across the barcode.
 
 ## Encoding algorithm (step-by-step)
 
@@ -199,10 +205,12 @@ The visual scanner uses simple image processing, optimized for live captures and
 - Padding/trimming: if the detected bars are fewer than 23, the algorithm may pad with zeros or reject (current implementation expects at least ~15 bars for a reasonable attempt).
 
 Limitations:
+
 - The scanner assumes a mostly upright barcode with bars vertically aligned. It does not automatically rotate the image to correct skew.
 - Barcode must have enough contrast and reasonable resolution — very small prints or heavy blur will fail.
 
 Tips for reliable scanning
+
 - Print or display the barcode large enough so each bar is several pixels wide in the camera image.
 - Use a plain background with high contrast (black bars on white background recommended).
 - Center the barcode in the camera frame and try to align the bars vertically.
@@ -230,11 +238,13 @@ npm run dev
 Open the app in your browser (Vite will show a URL like `http://localhost:5173`).
 
 Generate flow:
+
 - Enter a URL in the "YouTube URL" field and click `Encode`. The app will create a numeric ID, store the mapping locally and draw the barcode.
 - Or enter a numeric ID manually and click `Generate`.
 - Download the PNG for printing or sharing.
 
 Scan flow:
+
 - In the `Scan` tab choose `Camera` (or `Upload Image`).
 - For camera mode, click `Start Camera` then `Capture & Decode` to attempt decoding the barcode.
 - If a mapping exists in localStorage for the decoded ID, the scanner will redirect the page to the mapped URL.
@@ -242,11 +252,13 @@ Scan flow:
 ## Developer notes & extensions
 
 - The scanner is intentionally lightweight and implemented in the browser (no worker threads). For better performance and robustness:
+
   - Add rotation detection and deskewing (Hough transform or orientation heuristics).
   - Use adaptive thresholding instead of a fixed brightness cutoff.
   - Implement a small error-correction code (e.g., BCH or reed-solomon) if you need more reliability than CRC provides.
 
 - For production mapping:
+
   - Replace the `localStorage` mapping with a server-side resolver. The barcode would encode a numeric key; the server maps it to the current resource URL.
 
 - Testing: sample PNGs should be generated at a few scales and scanned to validate thresholds and unit calibration.
@@ -258,11 +270,13 @@ Scan flow:
 ---
 
 If you'd like, I can also:
+
 - Add a small server example (Node/Express) to store mappings and fetch them during scan.
 - Generate a set of example PNG barcodes for testing at several sizes and camera distances.
 - Improve the scanner with adaptive thresholding and rotation tolerance.
 
 File: `src/WaveformBarcodeV2.jsx` contains the implementation; read it for code-level details.
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

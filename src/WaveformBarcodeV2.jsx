@@ -328,7 +328,10 @@ function WaveformBarcodeV2() {
         setError("");
         if (result.valid) {
           const url = urlMap.get(result.data);
-          if (url) setMappedUrl(url);
+          if (url) {
+            setMappedUrl(url);
+            window.open(url, "_blank");
+          }
         }
       }
     };

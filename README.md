@@ -1,4 +1,4 @@
-# scan-audio-waveform — Waveform Barcode v2
+# scan-audio-waveform — Waveform Barcode
 
 This repository is a small demo app (Vite + React) that implements a visual "waveform barcode" format. The app can:
 
